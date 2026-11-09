@@ -18,8 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     # Skipping load testing for now.  They need some love to get up and
     # running properly, and it's better to not fight for resources with
-    # tests that are guaranteed to fail.
-    if: false
+    # tests that are guaranteed to fail.  Set the repository variable
+    # RUN_LOAD_TESTS to 'true' to re-enable.
+    if: vars.RUN_LOAD_TESTS == 'true'
     defaults:
       run:
         working-directory: src
