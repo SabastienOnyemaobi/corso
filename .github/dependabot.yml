@@ -7,35 +7,46 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "alcionai/corso-maintainers"
-    open-pull-requests-limit: 50
+    open-pull-requests-limit: 10
     rebase-strategy: "disabled"
+    groups:
+      actions:
+        patterns: ["*"]
 
   # Maintain dependencies for npm - website
   - package-ecosystem: "npm"
     directory: "website/"
     schedule:
-      interval: "daily"
-    reviewers:
-      - "alcionai/corso-maintainers"
-      - "ntolia"
-      - "gmatev"
-    open-pull-requests-limit: 50
+      interval: "weekly"
+    open-pull-requests-limit: 10
     rebase-strategy: "disabled"
+    groups:
+      # one PR for everything that should be backwards compatible
+      website-minor:
+        update-types: ["minor", "patch"]
+    ignore:
+      # major upgrades need a manual migration of the site's styles
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tw-elements"
+        update-types: ["version-update:semver-major"]
 
   # Maintain dependencies for go - src
   - package-ecosystem: "gomod"
     directory: "src/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    rebase-strategy: "disabled"
+    groups:
+      # one PR for everything that should be backwards compatible
+      go-minor:
+        update-types: ["minor", "patch"]
     ignore:
       # pinned on purpose, see the note in src/go.mod
       - dependency-name: "github.com/vbauerster/mpb/v8"
-    schedule:
-      interval: "daily"
-    reviewers:
-      - "alcionai/corso-maintainers"
-    open-pull-requests-limit: 50
-    rebase-strategy: "disabled"
+      # the module was renamed upstream; Dependabot errors on the old path
+      - dependency-name: "github.com/armon/go-metrics"
 
   # Maintain base images
   - package-ecosystem: "docker"
@@ -47,3 +58,7 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 10
     rebase-strategy: "disabled"
+    ignore:
+      # the Go image follows the version in src/go.mod; only take patches
+      - dependency-name: "golang"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]

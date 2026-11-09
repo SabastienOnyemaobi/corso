@@ -45,7 +45,7 @@ jobs:
 
       # Install gotestfmt
       - name: Set up gotestfmt
-        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
+        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
 
       # run the tests
       - name: Integration Tests
