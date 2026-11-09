@@ -16,7 +16,7 @@ linters:
       check:
         - switch
       default-signifies-exhaustive: false
-      explicit-exhaustive-switch: true
+      explicit-exhaustive: true
     forbidigo:
       forbid:
         - pattern: context\.(Background|TODO)(# tests should use tester\.NewContext)?
