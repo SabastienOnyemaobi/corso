@@ -161,7 +161,7 @@ jobs:
 
       # Install gotestfmt
       - name: Set up gotestfmt
-        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
+        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
 
       # AWS creds
       - name: Configure AWS credentials from Test account
@@ -237,7 +237,7 @@ jobs:
 
       # Install gotestfmt
       - name: Set up gotestfmt
-        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
+        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
 
       # AWS creds
       - name: Configure AWS credentials from Test account
@@ -306,7 +306,7 @@ jobs:
 
       # Install gotestfmt
       - name: Set up gotestfmt
-        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
+        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
 
       # run the tests
       - name: Unit Tests
@@ -410,7 +410,7 @@ jobs:
 
       # Install gotestfmt
       - name: Set up gotestfmt
-        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
+        run: go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@v2.5.0
 
       # AWS creds
       - name: Configure AWS credentials from Test account
@@ -511,7 +511,7 @@ jobs:
 
       # check licenses
       - name: Get go-licenses
-        run: go install github.com/google/go-licenses@latest
+        run: go install github.com/google/go-licenses@v1.6.0
 
       - name: Run go-licenses
         run: go-licenses check github.com/alcionai/corso/src --ignore github.com/alcionai/corso/src
@@ -524,7 +524,7 @@ jobs:
 
       - name: Run allowtags
         run: |
-          go install github.com/ashmrtn/allowtags@latest
+          go install github.com/ashmrtn/allowtags@v0.0.3
           allowtags --allow-key json --allow-key uriparametername ./...
 
       # I could not find a way to install tree-grepper without nix
@@ -533,7 +533,7 @@ jobs:
       - uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
         with:
             name: tree-grepper
-      - run: nix-env -if https://github.com/BrianHicks/tree-grepper/archive/refs/heads/main.tar.gz
+      - run: nix-env -if https://github.com/BrianHicks/tree-grepper/archive/f7ae057691f6942994ba35d06c02efcb037afba7.tar.gz
       - name: Run trailing comma lint rule
         run: |
           # Using `grep .` as the exit codes are always true for correct grammar

@@ -21,7 +21,7 @@ ARG TARGETARCH
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -o /corso .
 
 ## Deploy
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 RUN apt-get update \
   && apt-get -y upgrade \
