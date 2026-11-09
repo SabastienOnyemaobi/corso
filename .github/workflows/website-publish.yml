@@ -3,11 +3,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  # required to retrieve AWS credentials
-  id-token: write
-  contents: write
-  packages: write
-  pull-requests: read
+  contents: read
 
 # cancel currently running jobs if a new version of the branch is pushed
 concurrency:
@@ -21,8 +17,9 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0 # needed to get latest tag
 
       - name: Get version string
@@ -40,7 +37,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Lint Website
         uses: ./.github/actions/website-linting
@@ -48,6 +47,9 @@ jobs:
           version: ${{ needs.SetEnv.outputs.version }}
 
   Publish-Website:
+    permissions:
+      contents: read
+      id-token: write
     needs: [Website-Linting]
     environment: Production
     runs-on: ubuntu-latest
@@ -56,7 +58,9 @@ jobs:
         working-directory: website
 
     steps:
-      - uses: actions/checkout@v4 # need to checkout to make the action available
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # need to checkout to make the action available
+        with:
+          persist-credentials: false
 
       - name: Publish website
         uses: ./.github/actions/publish-website

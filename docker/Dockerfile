@@ -4,7 +4,7 @@
 # It is not used for deployments.
 
 ## Build
-FROM golang:1.19 AS base
+FROM golang:1.26 AS base
 
 WORKDIR /src
 
@@ -17,10 +17,16 @@ COPY ./src .
 FROM base AS build
 ARG TARGETOS
 ARG TARGETARCH
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /corso .
+# static binary: no dependency on the runtime image's libc
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -o /corso .
 
 ## Deploy
-FROM ubuntu:22.10
+FROM ubuntu:24.04
+
+RUN apt-get update \
+  && apt-get -y upgrade \
+  && apt-get -y install --no-install-recommends ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /corso /
 

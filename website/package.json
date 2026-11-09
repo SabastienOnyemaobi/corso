@@ -14,19 +14,17 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docusaurus/core": "3.1.1",
-    "@docusaurus/plugin-google-gtag": "^3.5.1",
-    "@docusaurus/preset-classic": "3.1.1",
-    "@loadable/component": "^5.16.3",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/plugin-google-gtag": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@loadable/component": "^5.16.7",
     "@mdx-js/react": "^3.0.0",
     "animate.css": "^4.1.1",
     "clsx": "2.1.0",
     "docusaurus-plugin-image-zoom": "^2.0.0",
     "docusaurus-plugin-sass": "^0.2.5",
     "feather-icons": "^4.29.1",
-    "jarallax": "^2.2.0",
-    "mdx-mermaid": "^2.0.0",
-    "mermaid": "^10.9.0",
+    "jarallax": "^3.1.0",
     "prism-react-renderer": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.3.0",
@@ -36,7 +34,7 @@
     "wow.js": "^1.2.2"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.5.1",
+    "@docusaurus/module-type-aliases": "3.10.2",
     "@iconify/react": "^4.1.1",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
@@ -55,6 +53,13 @@
     ]
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=20.0"
+  },
+  "overrides": {
+    "tinypool": "^2.2.0",
+    "serialize-javascript": "^7.1.4",
+    "sockjs": {
+      "uuid": "^11.1.1"
+    }
   }
 }

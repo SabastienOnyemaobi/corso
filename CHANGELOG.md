@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased] (beta)
+### Security
+- Build with Go 1.26 and update dependencies with known vulnerabilities (golang.org/x/net, x/crypto, x/text, grpc, golang-jwt, azidentity, kiota-http-go, brotli, klauspost/compress).
+- Update container base images and website dependencies.
+
 ### Fixed
 - Handle the case where an email or event cannot be retrieved from Exchange due to an `ErrorCorruptData` error. Corso will skip over the item but report it in the backup summary.
 - Emails attached within other emails are now correctly exported

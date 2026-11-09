@@ -229,27 +229,27 @@ func Timeout(timeout time.Duration) Option {
 	}
 }
 
-func MaxRetries(max int) Option {
+func MaxRetries(maxRetries int) Option {
 	return func(c *clientConfig) {
-		if max < 0 {
-			max = 0
-		} else if max > 5 {
-			max = 5
+		if maxRetries < 0 {
+			maxRetries = 0
+		} else if maxRetries > 5 {
+			maxRetries = 5
 		}
 
-		c.maxRetries = max
+		c.maxRetries = maxRetries
 	}
 }
 
-func MinimumBackoff(min time.Duration) Option {
+func MinimumBackoff(minDelay time.Duration) Option {
 	return func(c *clientConfig) {
-		if min < 100*time.Millisecond {
-			min = 100 * time.Millisecond
-		} else if min > 5*time.Second {
-			min = 5 * time.Second
+		if minDelay < 100*time.Millisecond {
+			minDelay = 100 * time.Millisecond
+		} else if minDelay > 5*time.Second {
+			minDelay = 5 * time.Second
 		}
 
-		c.minDelay = min
+		c.minDelay = minDelay
 	}
 }
 
@@ -261,15 +261,15 @@ func appendMiddleware(mw ...khttp.Middleware) Option {
 	}
 }
 
-func MaxConnectionRetries(max int) Option {
+func MaxConnectionRetries(maxRetries int) Option {
 	return func(c *clientConfig) {
-		if max < 0 {
-			max = 0
-		} else if max > 5 {
-			max = 5
+		if maxRetries < 0 {
+			maxRetries = 0
+		} else if maxRetries > 5 {
+			maxRetries = 5
 		}
 
-		c.maxConnectionRetries = max
+		c.maxConnectionRetries = maxRetries
 	}
 }
 

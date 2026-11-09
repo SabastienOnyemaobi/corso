@@ -111,35 +111,35 @@ func (bb *backupBases) ConvertToAssistBase(backupID model.StableID) {
 }
 
 func (bb *backupBases) MinBackupVersion() int {
-	min := version.NoBackup
+	minVer := version.NoBackup
 
 	if bb == nil {
-		return min
+		return minVer
 	}
 
 	for _, base := range bb.mergeBases {
-		if min == version.NoBackup || base.Backup.Version < min {
-			min = base.Backup.Version
+		if minVer == version.NoBackup || base.Backup.Version < minVer {
+			minVer = base.Backup.Version
 		}
 	}
 
-	return min
+	return minVer
 }
 
 func (bb *backupBases) MinAssistVersion() int {
-	min := version.NoBackup
+	minVer := version.NoBackup
 
 	if bb == nil {
-		return min
+		return minVer
 	}
 
 	for _, base := range bb.assistBases {
-		if min == version.NoBackup || base.Backup.Version < min {
-			min = base.Backup.Version
+		if minVer == version.NoBackup || base.Backup.Version < minVer {
+			minVer = base.Backup.Version
 		}
 	}
 
-	return min
+	return minVer
 }
 
 func (bb backupBases) MergeBases() []BackupBase {

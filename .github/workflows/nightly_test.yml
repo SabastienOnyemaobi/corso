@@ -7,10 +7,7 @@ on:
     - cron: "0 4 * * *"
 
 permissions:
-  # required to retrieve AWS credentials
-  id-token: write
-  contents: write
-  packages: write
+  contents: read
   pull-requests: read
 
 # cancel currently running jobs if a new version of the branch is pushed
@@ -30,7 +27,9 @@ jobs:
       run:
         working-directory: src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # single setup and sum cache handling here.
       # the results will cascade onto both testing and linting.
@@ -41,7 +40,7 @@ jobs:
 
   # SetM365App will decide which M365 app to use for this CI run
   SetM365App:
-    uses: alcionai/corso/.github/workflows/accSelector.yaml@main
+    uses: ./.github/workflows/accSelector.yaml
 
   # ----------------------------------------------------------------------------------------------------
   # --- Nightly Testing -------------------------------------------------------------------
@@ -60,10 +59,12 @@ jobs:
       AZURE_CLIENT_SECRET_NAME: ${{ needs.SetM365App.outputs.client_secret_env }}
       CLIENT_APP_SLOT: ${{ needs.SetM365App.outputs.client_app_slot }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v4
+        uses: magnetikonline/action-golang-cache@fcca93e25c7fe3943de4d40c22d255d17f63e63b # v5
         with:
           go-version-file: src/go.mod
 
@@ -107,7 +108,7 @@ jobs:
       # Upload the original go test output as an artifact for later review.
       - name: Upload test log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: nightly-test-log
           path: src/testlog/*

@@ -99,13 +99,13 @@ func NewBus(ctx context.Context, s storage.Storage, tenID string, co control.Opt
 
 	if len(RudderStackWriteKey) > 0 && len(RudderStackDataPlaneURL) > 0 {
 		var err error
+
 		client, err = analytics.NewWithConfig(
 			RudderStackWriteKey,
 			RudderStackDataPlaneURL,
 			analytics.Config{
 				Logger: logger.WrapCtx(ctx, logger.ForceDebugLogLevel()),
 			})
-
 		if err != nil {
 			return Bus{}, clues.WrapWC(ctx, err, "configuring event bus")
 		}

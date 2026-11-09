@@ -513,7 +513,7 @@ const (
 		"IiwiaXNsb29wYmFjayI6IlRydWUiLCJ2ZXIiOiJoYXNoZWRwcm9vZnRva2VuIiwicm9sZXMiOiJhbGxmaWxl" +
 		"cy53cml0ZSBhbGxzaXRlcy5mdWxsY29udHJvbCBhbGxwcm9maWxlcy5yZWFkIiwidHQiOiIxIiwiYWxnIjoi" +
 		"SFMyNTYifQ" +
-		".signature"
+		".c2lnbmF0dXJl" // base64url("signature"); jwt/v5 >= 5.2.2 rejects non-base64 signatures
 )
 
 // Tests getTokenLifetime
