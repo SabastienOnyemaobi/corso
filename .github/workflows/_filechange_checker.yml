@@ -24,11 +24,13 @@ jobs:
       websitefileschanged: ${{ steps.websitechecker.outputs.websitefileschanged }}
       actionsfileschanged: ${{ steps.actionschecker.outputs.actionsfileschanged }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # only run CI tests if the src folder or workflow actions have changed
       - name: Check for file changes in src/ or .github/workflows/
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3.0.4
         id: dornycheck
         with:
           list-files: json

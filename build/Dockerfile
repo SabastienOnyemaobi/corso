@@ -1,10 +1,10 @@
-FROM golang:1.21-alpine as builder
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /go/src/app
 COPY src .
 
 ARG CORSO_BUILD_LDFLAGS=""
-RUN go build -o corso -ldflags "$CORSO_BUILD_LDFLAGS"
+RUN CGO_ENABLED=0 go build -trimpath -o corso -ldflags "$CORSO_BUILD_LDFLAGS"
 
 FROM alpine:3
 
@@ -16,7 +16,8 @@ LABEL org.opencontainers.image.vendor="Alcion, Inc."
 
 COPY --from=builder /go/src/app/corso /corso
 
-RUN apk add --no-cache ca-certificates
+# pull in security fixes published since the base image was built
+RUN apk upgrade --no-cache && apk add --no-cache ca-certificates
 
 ENV CORSO_HOME=/app/corso
 ENV CORSO_CONFIG_DIR=$CORSO_HOME \

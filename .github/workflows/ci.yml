@@ -14,10 +14,7 @@ on:
     types: [ok-to-test-command]
 
 permissions:
-  # required to retrieve AWS credentials
-  id-token: write
-  contents: write
-  packages: write
+  contents: read
   pull-requests: read
 
 # cancel currently running jobs if a new version of the branch is pushed
@@ -30,7 +27,7 @@ jobs:
   # --- Prechecks and Checkouts ------------------------------------------------------------------------
   # ----------------------------------------------------------------------------------------------------
   Precheck:
-    uses: alcionai/corso/.github/workflows/_filechange_checker.yml@main
+    uses: ./.github/workflows/_filechange_checker.yml
 
   Checkout:
     needs: [Precheck]
@@ -40,7 +37,9 @@ jobs:
       run:
         working-directory: src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # single setup and sum cache handling here.
       # the results will cascade onto both testing and linting.
@@ -52,7 +51,7 @@ jobs:
 
   # SetM365App will decide which M365 app to use for this CI run
   SetM365App:
-    uses: alcionai/corso/.github/workflows/accSelector.yaml@main
+    uses: ./.github/workflows/accSelector.yaml
 
   SetEnv:
     environment: Testing
@@ -63,7 +62,9 @@ jobs:
       website-bucket: ${{ steps.website-bucket.outputs.website-bucket }}
       website-cfid: ${{ steps.website-cfid.outputs.website-cfid }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Figure out environment
         id: environment
@@ -114,7 +115,9 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || needs.precheck.outputs.websitefileschanged == 'true' # websitefileschanged also includes srcfileschanged
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Lint Website
         uses: ./.github/actions/website-linting
@@ -126,6 +129,9 @@ jobs:
   # ----------------------------------------------------------------------------------------------------
 
   Test-Suite-Trusted:
+    permissions:
+      contents: read
+      id-token: write
     needs: [Precheck, Checkout, SetM365App]
     environment: Testing
     runs-on: ubuntu-latest
@@ -142,10 +148,12 @@ jobs:
       CORSO_LOG_FILE: ${{ github.workspace }}/src/testlog/run-ci.log
       LOG_GRAPH_REQUESTS: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v4
+        uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
         with:
           go-version-file: src/go.mod
 
@@ -157,7 +165,7 @@ jobs:
 
       # AWS creds
       - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           role-session-name: integration-testing
@@ -189,7 +197,7 @@ jobs:
       # Upload the original go test output as an artifact for later review.
       - name: Upload test log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ci-test-log
           path: src/testlog/*
@@ -197,6 +205,9 @@ jobs:
           retention-days: 14
 
   Retention-Test-Suite-Trusted:
+    permissions:
+      contents: read
+      id-token: write
     needs: [Precheck, Checkout, SetM365App]
     environment: Testing
     runs-on: ubuntu-latest
@@ -213,10 +224,12 @@ jobs:
       CORSO_LOG_FILE: ${{ github.workspace }}/src/testlog/run-ci-retention.log
       LOG_GRAPH_REQUESTS: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v4
+        uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
         with:
           go-version-file: src/go.mod
 
@@ -228,7 +241,7 @@ jobs:
 
       # AWS creds
       - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           role-session-name: integration-testing
@@ -260,7 +273,7 @@ jobs:
       # Upload the original go test output as an artifact for later review.
       - name: Upload test log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ci-retention-test-log
           path: src/testlog/*
@@ -280,10 +293,12 @@ jobs:
       CORSO_LOG_FILE: ${{ github.workspace }}/src/testlog/run-unit.log
       LOG_GRAPH_REQUESTS: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v4
+        uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
         with:
           go-version-file: src/go.mod
 
@@ -315,7 +330,7 @@ jobs:
       # Upload the original go test output as an artifact for later review.
       - name: Upload test log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: unit-test-log
           path: src/testlog/*
@@ -323,6 +338,11 @@ jobs:
           retention-days: 14
 
   Test-Suite-Fork:
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      checks: write
     needs: [Precheck]
     environment: Testing
     if: (!startsWith(github.ref , 'refs/tags/') && github.ref != 'refs/heads/main') && (needs.precheck.outputs.srcfileschanged == 'true' && github.event.pull_request.head.repo.full_name != github.repository)
@@ -340,32 +360,49 @@ jobs:
           echo "Workflow requires approval from a maintainer to run. It will be automatically rerun on approval."
           exit 1
 
-      - uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event.client_payload.slash_command.args.named.sha != '' && contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.args.named.sha)
-        with:
-          message: |
-            Workflow run sha specified via `ok-to-test` is not the latest commit on PR. Run canceled.
-
-      - name: Fail check if not head of PR
-        if: github.event.client_payload.slash_command.args.named.sha != '' && contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.args.named.sha)
+      # The maintainer must name the commit they reviewed (`/ok-to-test sha=<sha>`), and it must
+      # still be the head of the PR. Otherwise a contributor could push new, unreviewed code
+      # between the review and this run, and have it executed with access to our secrets.
+      - name: Verify approved sha is the head of the PR
+        id: verify-sha
+        env:
+          APPROVED_SHA: ${{ github.event.client_payload.slash_command.args.named.sha }}
+          HEAD_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
+        working-directory: ${{ github.workspace }}
         run: |
-          echo "Workflow run sha specified is not the latest commit on PR. Exiting."
-          exit 1
+          if [[ ! "$APPROVED_SHA" =~ ^[0-9a-f]{7,40}$ ]]; then
+            echo "A commit sha (7-40 hex chars) is required: /ok-to-test sha=<sha>"
+            exit 1
+          fi
+          if [[ "$HEAD_SHA" != "$APPROVED_SHA"* ]]; then
+            echo "Approved sha is not the latest commit on the PR. Exiting."
+            exit 1
+          fi
+
+      - uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405 # v2.9.4
+        if: failure() && steps.verify-sha.conclusion == 'failure'
+        with:
+          number: ${{ github.event.client_payload.pull_request.number }}
+          message: |
+            `/ok-to-test` must name the latest commit on the PR (`/ok-to-test sha=<sha>`). Run canceled.
 
       # add comment to PR with link to workflow run
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405 # v2.9.4
         with:
+          number: ${{ github.event.client_payload.pull_request.number }}
           message: |
             Test suite run will be available at https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
 
-      # Check out merge commit
+      # Check out the approved commit
       - name: Fork based /ok-to-test checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: "refs/pull/${{ github.event.client_payload.pull_request.number }}/merge"
+          persist-credentials: false
+          # exactly the commit that was approved, never a moving ref
+          ref: ${{ github.event.client_payload.pull_request.head.sha }}
 
       - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v4
+        uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
         with:
           go-version-file: src/go.mod
 
@@ -377,7 +414,7 @@ jobs:
 
       # AWS creds
       - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           role-session-name: integration-testing
@@ -404,7 +441,7 @@ jobs:
       # Upload the original go test log as an artifact for later review.
       - name: Upload test log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: fork-test-log
           path: src/testlog/*
@@ -412,7 +449,7 @@ jobs:
           retention-days: 14
 
       # Update check run called "Test-Suite-Fork"
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         id: update-check-run
         if: failure()
         env:
@@ -455,22 +492,22 @@ jobs:
       run:
         working-directory: src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup Golang with cache
-        uses: magnetikonline/action-golang-cache@v4
+        uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
         with:
           go-version-file: src/go.mod
 
       - name: Go Lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
         with:
           # Keep pinned to a verson as sometimes updates will add new lint
           # failures in unchanged code.
-          version: v1.54.2
+          version: v2.15.0
           working-directory: src
-          skip-pkg-cache: true
-          skip-build-cache: true
 
       # check licenses
       - name: Get go-licenses
@@ -480,7 +517,7 @@ jobs:
         run: go-licenses check github.com/alcionai/corso/src --ignore github.com/alcionai/corso/src
 
       - name: Run staticcheck
-        uses: dominikh/staticcheck-action@v1.3.0
+        uses: dominikh/staticcheck-action@9716614d4101e79b4340dd97b10e54d68234e431 # v1.4.1
         with:
           install-go: false
           working-directory: src
@@ -492,8 +529,8 @@ jobs:
 
       # I could not find a way to install tree-grepper without nix
       # https://github.com/BrianHicks/tree-grepper/issues/293
-      - uses: cachix/install-nix-action@v25
-      - uses: cachix/cachix-action@v14
+      - uses: cachix/install-nix-action@6004951b182f8860210c8d6f0d808ec5b1a33d28 # v25
+      - uses: cachix/cachix-action@18cf96c7c98e048e10a83abd92116114cd8504be # v14
         with:
             name: tree-grepper
       - run: nix-env -if https://github.com/BrianHicks/tree-grepper/archive/refs/heads/main.tar.gz
@@ -543,10 +580,12 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.precheck.outputs.actionsfileschanged == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: actionlint
-        uses: raven-actions/actionlint@v1
+        uses: raven-actions/actionlint@789059c543ab20522fb3e7240794e13b0f69ad67 # v1.0.3
         with:
           fail-on-error: true
           cache: true
@@ -562,13 +601,17 @@ jobs:
   # ----------------------------------------------------------------------------------------------------
 
   Publish-Binary:
+    permissions:
+      contents: write
     needs: [Test-Suite-Trusted, Source-Code-Linting, Website-Linting, SetEnv]
     environment: ${{ needs.SetEnv.outputs.environment }}
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Publish Binary
         uses: ./.github/actions/publish-binary
@@ -579,6 +622,9 @@ jobs:
           rudderstack_data_plane_url: ${{ secrets.RUDDERSTACK_CORSO_DATA_PLANE_URL }}
 
   Publish-Image:
+    permissions:
+      contents: read
+      packages: write
     needs: [Test-Suite-Trusted, Source-Code-Linting, Website-Linting, SetEnv]
     environment: ${{ needs.SetEnv.outputs.environment }}
     runs-on: ubuntu-latest
@@ -589,17 +635,19 @@ jobs:
     env:
       PLATFORMS: linux/amd64,linux/arm64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # Setup buildx
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
       # retrieve credentials for ghcr.io
       - name: Login to Github Packages
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -607,7 +655,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
@@ -617,7 +665,7 @@ jobs:
 
       # deploy the image
       - name: Build image and push to GitHub Container Registry
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5.4.0
         with:
           context: .
           file: ./build/Dockerfile
@@ -647,7 +695,7 @@ jobs:
           ./corso --help
           ./corso --version 2>&1 | grep -E "version: ${{ env.CORSO_VERSION }}$"
       - name: Validate arm64 binary artifacts
-        uses: uraimo/run-on-arch-action@v2
+        uses: uraimo/run-on-arch-action@5397f9e30a9b62422f302092631c99ae1effcd9e # v2.8.1
         with:
           arch: armv7
           distro: ubuntu18.04
@@ -670,9 +718,9 @@ jobs:
       CORSO_VERSION: ${{ needs.SetEnv.outputs.version }}
     steps:
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
       - name: Validate amd64 container images
         run: |
@@ -721,13 +769,18 @@ jobs:
           ./corso.exe --version 2>&1 | grep -E "version: ${{ env.CORSO_VERSION }}$"
 
   Publish-Website-Test:
+    permissions:
+      contents: read
+      id-token: write
     needs: [Test-Suite-Trusted, Source-Code-Linting, Website-Linting, SetEnv]
     environment: ${{ needs.SetEnv.outputs.environment }}
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4 # need to checkout to make the action available
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # need to checkout to make the action available
+        with:
+          persist-credentials: false
 
       - name: Publish website
         uses: ./.github/actions/publish-website
@@ -737,13 +790,18 @@ jobs:
           cfid: ${{ needs.SetEnv.outputs.website-cfid }}
 
   Publish-Website-Prod:
+    permissions:
+      contents: read
+      id-token: write
     needs: [SetEnv, Validate-Linux-Artifacts, Validate-MacOS-Artifacts, Validate-Docker-Artifacts, Validate-Windows-Artifacts]
     environment: ${{ needs.SetEnv.outputs.environment }}
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - uses: actions/checkout@v4 # need to checkout to make the action available
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # need to checkout to make the action available
+        with:
+          persist-credentials: false
 
       - name: Publish website
         uses: ./.github/actions/publish-website

@@ -8,10 +8,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
 
     - name: Setup Golang with cache
-      uses: magnetikonline/action-golang-cache@v3
+      uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
       with:
         go-version-file: src/go.mod
 
@@ -51,7 +53,7 @@ runs:
           npm ci &&
           npm run build
 
-    - uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       name: Upload website as artifacts
       with:
         name: website

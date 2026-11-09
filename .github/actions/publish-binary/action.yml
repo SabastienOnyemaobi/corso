@@ -18,12 +18,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
+        persist-credentials: false
         fetch-depth: 0 # needed to pull changelog
 
     - name: Setup Golang with cache
-      uses: magnetikonline/action-golang-cache@v4
+      uses: magnetikonline/action-golang-cache@777394c89f8ed6fcf1649505277c46c1cd06494d # v4
       with:
         go-version-file: src/go.mod
 
@@ -34,9 +35,9 @@ runs:
         echo "grflags=--snapshot" >> $GITHUB_ENV
 
     - name: Run GoReleaser
-      uses: goreleaser/goreleaser-action@v4
+      uses: goreleaser/goreleaser-action@5fdedb94abba051217030cc86d4523cf3f02243d # v4.6.0
       with:
-        version: latest
+        version: "~> v1"
         args: release --clean --timeout 500m --parallelism 1 ${{ env.grflags }}
         workdir: src
       env:
@@ -46,31 +47,31 @@ runs:
         CORSO_VERSION: ${{ inputs.version }}
 
     - name: Upload darwin arm64
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: corso_Darwin_arm64
         path: src/dist/corso_darwin_arm64/corso
 
     - name: Upload linux arm64
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: corso_Linux_arm64
         path: src/dist/corso_linux_arm64/corso
 
     - name: Upload darwin amd64
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: corso_Darwin_amd64
         path: src/dist/corso_darwin_amd64_v1/corso
 
     - name: Upload linux amd64
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: corso_Linux_amd64
         path: src/dist/corso_linux_amd64_v1/corso
 
     - name: Upload windows amd64
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: corso_Windows_amd64
         path: src/dist/corso_windows_amd64_v1/corso.exe

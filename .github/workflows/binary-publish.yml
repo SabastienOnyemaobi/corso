@@ -2,6 +2,9 @@ name: Publish binary
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   SetEnv:
     environment: Testing
@@ -9,7 +12,9 @@ jobs:
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Get version string
         id: version
@@ -21,12 +26,16 @@ jobs:
           fi
 
   Publish-Binary:
+    permissions:
+      contents: write
     needs: [SetEnv]
     environment: Testing
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Publish Binary
         uses: ./.github/actions/publish-binary

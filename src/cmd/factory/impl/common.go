@@ -344,8 +344,8 @@ func generateAndRestoreDriveItems(
 
 		now              = time.Now()
 		year, mnth, date = now.Date()
-		hour, min, sec   = now.Clock()
-		currentTime      = fmt.Sprintf("%d-%v-%d-%d-%d-%d", year, mnth, date, hour, min, sec)
+		hour, mins, sec  = now.Clock()
+		currentTime      = fmt.Sprintf("%d-%v-%d-%d-%d-%d", year, mnth, date, hour, mins, sec)
 	)
 
 	for i := 0; i < intCount; i++ {

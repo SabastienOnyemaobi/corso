@@ -10,6 +10,9 @@ on:
       client_secret_env:
         value: ${{ jobs.GetM365App.outputs.client_secret_env }}
 
+permissions:
+  contents: read
+
 jobs:
   GetM365App:
     environment: Testing
