@@ -16,19 +16,19 @@ require (
 	github.com/alcionai/clues v0.0.0-20240125221452-9fc7746dd20c
 	github.com/armon/go-metrics v0.4.1
 	github.com/aws/aws-xray-sdk-go v1.8.5
-	github.com/cenkalti/backoff/v4 v4.2.1
+	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/fatih/color v1.19.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/uuid v1.6.0
 	github.com/h2non/gock v1.2.0
 	github.com/jaytaylor/html2text v0.0.0-20230321000545-74c2419ad056
-	github.com/jhillyerd/enmime v1.1.0
+	github.com/jhillyerd/enmime v1.3.0
 	github.com/kopia/kopia v0.15.0
 	github.com/microsoft/kiota-abstractions-go v1.12.1
 	github.com/microsoft/kiota-authentication-azure-go v1.3.1
 	github.com/microsoft/kiota-http-go v1.6.1
 	github.com/microsoft/kiota-serialization-form-go v1.1.6
-	github.com/microsoft/kiota-serialization-json-go v1.1.2
+	github.com/microsoft/kiota-serialization-json-go v1.1.5
 	github.com/microsoftgraph/msgraph-sdk-go v1.30.0
 	github.com/microsoftgraph/msgraph-sdk-go-core v1.4.1
 	github.com/pkg/errors v0.9.1
@@ -40,7 +40,7 @@ require (
 	github.com/spf13/pflag v1.1.0
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.12.1
-	github.com/tidwall/pretty v1.2.1
+	github.com/tidwall/pretty v1.2.2
 	github.com/tomlazar/table v0.1.2
 	github.com/vbauerster/mpb/v8 v8.1.6 // do not update; keep at v8.1.6
 	github.com/xhit/go-simple-mail/v2 v2.16.0
@@ -49,7 +49,7 @@ require (
 	golang.org/x/exp v0.0.0-20231127185646-65229373498e
 	golang.org/x/time v0.16.0
 	golang.org/x/tools v0.52.0
-	gotest.tools/v3 v3.5.1
+	gotest.tools/v3 v3.5.2
 )
 
 require (

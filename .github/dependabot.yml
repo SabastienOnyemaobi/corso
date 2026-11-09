@@ -27,6 +27,9 @@ updates:
   # Maintain dependencies for go - src
   - package-ecosystem: "gomod"
     directory: "src/"
+    ignore:
+      # pinned on purpose, see the note in src/go.mod
+      - dependency-name: "github.com/vbauerster/mpb/v8"
     schedule:
       interval: "daily"
     reviewers:
