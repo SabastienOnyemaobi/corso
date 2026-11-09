@@ -381,7 +381,7 @@ jobs:
       # Upload the original go test output as an artifact for later review.
       - name: Upload test log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: longevity-test-log
           path: src/testlog/*
