@@ -15,7 +15,7 @@ jobs:
         user: [CORSO_M365_TEST_USER_ID, CORSO_SECONDARY_M365_TEST_USER_ID, ""]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # sets the maximum time to now-30m.
       # CI test have a 20 minute timeout.
@@ -53,7 +53,7 @@ jobs:
         site: [CORSO_M365_TEST_SITE_URL, CORSO_M365_TEST_GROUPS_SITE_URL]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # sets the maximum time to now-30m.
       # CI test have a 20 minute timeout.

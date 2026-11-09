@@ -40,7 +40,7 @@ jobs:
       run:
         working-directory: src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # single setup and sum cache handling here.
       # the results will cascade onto both testing and linting.
@@ -63,7 +63,7 @@ jobs:
       website-bucket: ${{ steps.website-bucket.outputs.website-bucket }}
       website-cfid: ${{ steps.website-cfid.outputs.website-cfid }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Figure out environment
         id: environment
@@ -114,7 +114,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || needs.precheck.outputs.websitefileschanged == 'true' # websitefileschanged also includes srcfileschanged
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Lint Website
         uses: ./.github/actions/website-linting
@@ -142,7 +142,7 @@ jobs:
       CORSO_LOG_FILE: ${{ github.workspace }}/src/testlog/run-ci.log
       LOG_GRAPH_REQUESTS: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Golang with cache
         uses: magnetikonline/action-golang-cache@v4
@@ -213,7 +213,7 @@ jobs:
       CORSO_LOG_FILE: ${{ github.workspace }}/src/testlog/run-ci-retention.log
       LOG_GRAPH_REQUESTS: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Golang with cache
         uses: magnetikonline/action-golang-cache@v4
@@ -280,7 +280,7 @@ jobs:
       CORSO_LOG_FILE: ${{ github.workspace }}/src/testlog/run-unit.log
       LOG_GRAPH_REQUESTS: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Golang with cache
         uses: magnetikonline/action-golang-cache@v4
@@ -360,7 +360,7 @@ jobs:
 
       # Check out merge commit
       - name: Fork based /ok-to-test checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: "refs/pull/${{ github.event.client_payload.pull_request.number }}/merge"
 
@@ -455,7 +455,7 @@ jobs:
       run:
         working-directory: src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Golang with cache
         uses: magnetikonline/action-golang-cache@v4
@@ -543,7 +543,7 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.precheck.outputs.actionsfileschanged == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: actionlint
         uses: raven-actions/actionlint@v1
@@ -568,7 +568,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Publish Binary
         uses: ./.github/actions/publish-binary
@@ -589,7 +589,7 @@ jobs:
     env:
       PLATFORMS: linux/amd64,linux/arm64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Setup buildx
       - name: Set up QEMU
@@ -727,7 +727,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4 # need to checkout to make the action available
+      - uses: actions/checkout@v7 # need to checkout to make the action available
 
       - name: Publish website
         uses: ./.github/actions/publish-website
@@ -743,7 +743,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - uses: actions/checkout@v4 # need to checkout to make the action available
+      - uses: actions/checkout@v7 # need to checkout to make the action available
 
       - name: Publish website
         uses: ./.github/actions/publish-website

@@ -30,7 +30,7 @@ jobs:
       run:
         working-directory: src
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # single setup and sum cache handling here.
       # the results will cascade onto both testing and linting.
@@ -60,7 +60,7 @@ jobs:
       AZURE_CLIENT_SECRET_NAME: ${{ needs.SetM365App.outputs.client_secret_env }}
       CLIENT_APP_SLOT: ${{ needs.SetM365App.outputs.client_app_slot }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Golang with cache
         uses: magnetikonline/action-golang-cache@v4
