@@ -647,7 +647,7 @@ jobs:
           ./corso --help
           ./corso --version 2>&1 | grep -E "version: ${{ env.CORSO_VERSION }}$"
       - name: Validate arm64 binary artifacts
-        uses: uraimo/run-on-arch-action@v2
+        uses: uraimo/run-on-arch-action@v3
         with:
           arch: armv7
           distro: ubuntu18.04
