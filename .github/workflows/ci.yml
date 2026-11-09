@@ -340,7 +340,7 @@ jobs:
           echo "Workflow requires approval from a maintainer to run. It will be automatically rerun on approval."
           exit 1
 
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         if: github.event.client_payload.slash_command.args.named.sha != '' && contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.args.named.sha)
         with:
           message: |
@@ -353,7 +353,7 @@ jobs:
           exit 1
 
       # add comment to PR with link to workflow run
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           message: |
             Test suite run will be available at https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
