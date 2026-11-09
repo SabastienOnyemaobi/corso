@@ -1,6 +1,6 @@
 module github.com/alcionai/corso/src
 
-go 1.21
+go 1.26.0
 
 replace (
 	github.com/kopia/kopia => github.com/alcionai/kopia v0.12.2-0.20240322180947-41471159a0a4
@@ -45,7 +45,7 @@ require (
 	go.uber.org/goleak v1.3.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/exp v0.0.0-20231127185646-65229373498e
-	golang.org/x/time v0.5.0
+	golang.org/x/time v0.16.0
 	golang.org/x/tools v0.17.0
 	gotest.tools/v3 v3.5.1
 )
