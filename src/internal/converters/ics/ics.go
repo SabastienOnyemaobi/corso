@@ -253,7 +253,7 @@ func FromEventable(ctx context.Context, event models.Eventable) (string, error) 
 
 	exceptionOcurrances := event.GetAdditionalData()["exceptionOccurrences"]
 	if exceptionOcurrances == nil {
-		return cal.Serialize(), nil
+		return cal.Serialize(ics.WithNewLineWindows), nil
 	}
 
 	for _, occ := range exceptionOcurrances.([]any) {
@@ -285,7 +285,7 @@ func FromEventable(ctx context.Context, event models.Eventable) (string, error) 
 		}
 	}
 
-	return cal.Serialize(), nil
+	return cal.Serialize(ics.WithNewLineWindows), nil
 }
 
 func getTZDataKeyValues(ctx context.Context, timezone string) (map[string]string, error) {

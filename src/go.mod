@@ -29,7 +29,7 @@ require (
 	github.com/microsoft/kiota-http-go v1.6.1
 	github.com/microsoft/kiota-serialization-form-go v1.1.6
 	github.com/microsoft/kiota-serialization-json-go v1.1.5
-	github.com/microsoftgraph/msgraph-sdk-go v1.30.0
+	github.com/microsoftgraph/msgraph-sdk-go v1.105.0
 	github.com/microsoftgraph/msgraph-sdk-go-core v1.4.1
 	github.com/pkg/errors v0.9.1
 	github.com/puzpuzpuz/xsync/v3 v3.5.1
@@ -53,7 +53,7 @@ require (
 )
 
 require (
-	github.com/arran4/golang-ical v0.2.4
+	github.com/arran4/golang-ical v0.3.8
 	github.com/emersion/go-vcard v0.1.0
 	jaytaylor.com/html2text v0.0.0-20230321000545-74c2419ad056
 )
@@ -76,7 +76,7 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
-	github.com/microsoft/kiota-serialization-multipart-go v1.0.0 // indirect
+	github.com/microsoft/kiota-serialization-multipart-go v1.1.2 // indirect
 	github.com/minio/sha256-simd v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect

@@ -326,3 +326,75 @@ func (suite *GroupsIntgSuite) TestGroups_GetByID_mockResourceLockedErrs() {
 		})
 	}
 }
+
+// resourceProvisioningOptions is a typed property in newer graph SDK
+// versions and additional data in older ones.  IsTeam must handle both.
+func (suite *GroupUnitSuite) TestIsTeam() {
+	table := []struct {
+		name   string
+		group  func() models.Groupable
+		expect assert.BoolAssertionFunc
+	}{
+		{
+			name: "no options",
+			group: func() models.Groupable {
+				return models.NewGroup()
+			},
+			expect: assert.False,
+		},
+		{
+			name: "typed, team",
+			group: func() models.Groupable {
+				g := models.NewGroup()
+				g.SetResourceProvisioningOptions([]string{"Team"})
+
+				return g
+			},
+			expect: assert.True,
+		},
+		{
+			name: "typed, not a team",
+			group: func() models.Groupable {
+				g := models.NewGroup()
+				g.SetResourceProvisioningOptions([]string{})
+
+				return g
+			},
+			expect: assert.False,
+		},
+		{
+			name: "additional data, team",
+			group: func() models.Groupable {
+				g := models.NewGroup()
+				g.SetAdditionalData(map[string]any{
+					ResourceProvisioningOptions: []any{ptr.To("Team")},
+				})
+
+				return g
+			},
+			expect: assert.True,
+		},
+		{
+			name: "additional data, not a team",
+			group: func() models.Groupable {
+				g := models.NewGroup()
+				g.SetAdditionalData(map[string]any{
+					ResourceProvisioningOptions: []any{},
+				})
+
+				return g
+			},
+			expect: assert.False,
+		},
+	}
+	for _, test := range table {
+		suite.Run(test.name, func() {
+			t := suite.T()
+
+			ctx, flush := tester.NewContext(t)
+			defer flush()
+
+			test.expect(t, IsTeam(ctx, test.group()))
+		})
+	}
+}

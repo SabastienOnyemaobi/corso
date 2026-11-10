@@ -195,9 +195,9 @@ func (c Events) GetItem(
 		}
 	)
 
-	// Beta endpoint helps us fetch the event exceptions, but since we
-	// don't use the beta SDK, the exceptionOccurrences and
-	// cancelledOccurrences end up in AdditionalData
+	// Beta endpoint helps us fetch the event exceptions.  The
+	// exceptionOccurrences and cancelledOccurrences are handled as untyped
+	// AdditionalData throughout corso; see untypeEventOccurrences.
 	// https://learn.microsoft.com/en-us/graph/api/resources/event?view=graph-rest-beta#properties
 	rawURL := fmt.Sprintf(eventExceptionsBetaURLTemplate, userID, itemID)
 
@@ -206,6 +206,11 @@ func (c Events) GetItem(
 		Get(ctx, config)
 	if err != nil {
 		return nil, nil, clues.Stack(err)
+	}
+
+	err = untypeEventOccurrences(event)
+	if err != nil {
+		return nil, nil, clues.Wrap(err, "normalizing event occurrences")
 	}
 
 	_, err = GetCancelledEventDateStrings(event)
@@ -335,6 +340,73 @@ func GetCancelledEventDateStrings(event models.Eventable) ([]string, error) {
 	}
 
 	return dates, nil
+}
+
+// untypeEventOccurrences moves cancelledOccurrences and exceptionOccurrences
+// out of the event's typed properties and back into its additional data.
+//
+// Older graph SDK versions did not model these two beta-only properties, so
+// they were deserialized into AdditionalData as untyped values, and backup,
+// restore and export all read (and mutate) them there.  Newer SDK versions
+// have typed properties for them.  Normalizing at the points where events are
+// loaded keeps a single representation, and keeps the serialized backup
+// format unchanged.
+func untypeEventOccurrences(event models.Eventable) error {
+	if event == nil {
+		return nil
+	}
+
+	var (
+		cancelled  = event.GetCancelledOccurrences()
+		exceptions = event.GetExceptionOccurrences()
+	)
+
+	if cancelled == nil && exceptions == nil {
+		return nil
+	}
+
+	ad := event.GetAdditionalData()
+	if ad == nil {
+		ad = map[string]any{}
+	}
+
+	if cancelled != nil {
+		co := make([]any, 0, len(cancelled))
+
+		for _, id := range cancelled {
+			co = append(co, ptr.To(id))
+		}
+
+		ad["cancelledOccurrences"] = co
+
+		event.SetCancelledOccurrences(nil)
+	}
+
+	if exceptions != nil {
+		eo := make([]any, 0, len(exceptions))
+
+		for _, exception := range exceptions {
+			// exceptions never nest, but stay consistent if they ever do.
+			if err := untypeEventOccurrences(exception); err != nil {
+				return err
+			}
+
+			em, err := parseableToMap(exception)
+			if err != nil {
+				return clues.Wrap(err, "converting exception occurrence")
+			}
+
+			eo = append(eo, em)
+		}
+
+		ad["exceptionOccurrences"] = eo
+
+		event.SetExceptionOccurrences(nil)
+	}
+
+	event.SetAdditionalData(ad)
+
+	return nil
 }
 
 func parseableToMap(att serialization.Parsable) (map[string]any, error) {
@@ -562,7 +634,13 @@ func BytesToEventable(body []byte) (models.Eventable, error) {
 		return nil, clues.Stack(err)
 	}
 
-	return v.(models.Eventable), nil
+	event := v.(models.Eventable)
+
+	if err := untypeEventOccurrences(event); err != nil {
+		return nil, clues.Stack(err)
+	}
+
+	return event, nil
 }
 
 func (c Events) Serialize(
