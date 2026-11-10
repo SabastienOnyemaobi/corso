@@ -763,7 +763,7 @@ func (s *ICSUnitSuite) TestEventConversion() {
 				return e
 			},
 			check: func(out string) {
-				assert.Contains(t, out, "ORGANIZER:user@provider.co", "organizer")
+				assert.Contains(t, out, "ORGANIZER:mailto:user@provider.co", "organizer")
 			},
 		},
 		{
@@ -784,7 +784,7 @@ func (s *ICSUnitSuite) TestEventConversion() {
 				return e
 			},
 			check: func(out string) {
-				assert.Contains(t, out, "ORGANIZER;CN=User:user@provider.co", "organizer")
+				assert.Contains(t, out, "ORGANIZER;CN=User:mailto:user@provider.co", "organizer")
 			},
 		},
 		{
@@ -1505,7 +1505,7 @@ func (s *ICSUnitSuite) TestAddTimezoneComponents() {
 	err := addTimeZoneComponents(ctx, cal, event)
 	require.NoError(s.T(), err)
 
-	text := cal.Serialize()
+	text := cal.Serialize(ics.WithNewLineWindows)
 	assert.Contains(s.T(), text, "BEGIN:VTIMEZONE", "beginning of timezone")
 	assert.Contains(s.T(), text, "TZID:Asia/Kolkata", "timezone id")
 	assert.Contains(s.T(), text, "END:VTIMEZONE", "end of timezone")
@@ -1585,7 +1585,7 @@ func (s *ICSUnitSuite) TestAddTime() {
 				return c == ':' || c == ';'
 			})
 
-			text := cal.Serialize()
+			text := cal.Serialize(ics.WithNewLineWindows)
 			checkLine := ""
 
 			for _, l := range strings.Split(text, "\r\n") {

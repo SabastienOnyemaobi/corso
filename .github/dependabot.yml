@@ -47,6 +47,11 @@ updates:
       - dependency-name: "github.com/vbauerster/mpb/v8"
       # the module was renamed upstream; Dependabot errors on the old path
       - dependency-name: "github.com/armon/go-metrics"
+      # 7.0.83 added a method to credentials.Provider that the pinned kopia
+      # fork does not implement; later versions do not build until kopia
+      # is updated.
+      - dependency-name: "github.com/minio/minio-go/v7"
+        versions: [">= 7.0.83"]
 
   # Maintain base images
   - package-ecosystem: "docker"

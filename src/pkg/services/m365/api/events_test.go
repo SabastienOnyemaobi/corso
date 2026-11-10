@@ -410,3 +410,60 @@ func (suite *EventsAPIIntgSuite) TestEvents_GetContainerByName_mocked() {
 		})
 	}
 }
+
+// cancelledOccurrences and exceptionOccurrences must stay in the event's
+// additional data, as untyped values, no matter how the graph SDK models
+// them: backup, restore and export read them from there, and the serialized
+// backup format has to stay stable.
+func (suite *EventsAPIUnitSuite) TestBytesToEventable_occurrencesStayUntyped() {
+	t := suite.T()
+
+	body := []byte(`{
+		"id": "master",
+		"subject": "series",
+		"cancelledOccurrences": ["OID.master.2024-01-25"],
+		"exceptionOccurrences": [
+			{"id": "ex1", "subject": "moved", "originalStart": "2024-01-26T10:00:00Z"}
+		]
+	}`)
+
+	event, err := BytesToEventable(body)
+	require.NoError(t, err, clues.ToCore(err))
+
+	assert.Nil(t, event.GetCancelledOccurrences(), "typed cancelled occurrences")
+	assert.Nil(t, event.GetExceptionOccurrences(), "typed exception occurrences")
+
+	dates, err := GetCancelledEventDateStrings(event)
+	require.NoError(t, err, clues.ToCore(err))
+	assert.Equal(t, []string{"2024-01-25"}, dates)
+
+	eo, ok := event.GetAdditionalData()["exceptionOccurrences"].([]any)
+	require.True(t, ok, "exceptionOccurrences is a []any")
+	require.Len(t, eo, 1)
+
+	instance, ok := eo[0].(map[string]any)
+	require.True(t, ok, "exception occurrence is a map")
+
+	exception, err := EventFromMap(instance)
+	require.NoError(t, err, clues.ToCore(err))
+	assert.Equal(t, "ex1", ptr.Val(exception.GetId()))
+	assert.Equal(t, "moved", ptr.Val(exception.GetSubject()))
+
+	// a second round trip must produce the same shape
+	ctx, flush := tester.NewContext(t)
+	defer flush()
+
+	bs, err := Events{}.Serialize(ctx, event, "user", "master")
+	require.NoError(t, err, clues.ToCore(err))
+
+	again, err := BytesToEventable(bs)
+	require.NoError(t, err, clues.ToCore(err))
+
+	dates, err = GetCancelledEventDateStrings(again)
+	require.NoError(t, err, clues.ToCore(err))
+	assert.Equal(t, []string{"2024-01-25"}, dates)
+
+	eo, ok = again.GetAdditionalData()["exceptionOccurrences"].([]any)
+	require.True(t, ok, "exceptionOccurrences is a []any after round trip")
+	assert.Len(t, eo, 1)
+}

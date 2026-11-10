@@ -377,6 +377,14 @@ func OnlyTeams(ctx context.Context, gs []models.Groupable) []models.Groupable {
 func IsTeam(ctx context.Context, mg models.Groupable) bool {
 	log := logger.Ctx(ctx)
 
+	// Newer graph SDK versions model resourceProvisioningOptions as a typed
+	// property; older ones left it in the additional data.  Check both.
+	for _, opt := range mg.GetResourceProvisioningOptions() {
+		if opt == teamsAdditionalDataLabel {
+			return true
+		}
+	}
+
 	if mg.GetAdditionalData()[ResourceProvisioningOptions] == nil {
 		return false
 	}
