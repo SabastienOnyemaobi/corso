@@ -25,10 +25,8 @@ updates:
       website-minor:
         update-types: ["minor", "patch"]
     ignore:
-      # major upgrades need a manual migration of the site's styles
+      # the major upgrade needs a manual migration of the site's styles
       - dependency-name: "tailwindcss"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "tw-elements"
         update-types: ["version-update:semver-major"]
 
   # Maintain dependencies for go - src

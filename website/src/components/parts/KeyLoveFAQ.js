@@ -8,7 +8,6 @@ export default function KeyLoveFAQ() {
       const WOW = require("wow.js");
       const father = require("feather-icons");
       const jarallax = require("jarallax");
-      require("tw-elements");
 
       new WOW({
         live: false,
@@ -19,6 +18,37 @@ export default function KeyLoveFAQ() {
       });
     }
   }, []);
+
+  // FAQ accordion: one item open at a time, click again to close.
+  // Driven by the data-bs-* attributes already on the markup.
+  const toggleFaq = (e) => {
+    const button = e.target.closest('[data-bs-toggle="collapse"]');
+    if (!button) {
+      return;
+    }
+
+    const accordion = e.currentTarget;
+    const panel = accordion.querySelector(button.getAttribute("data-bs-target"));
+    if (!panel) {
+      return;
+    }
+
+    const open = !panel.classList.contains("show");
+
+    accordion.querySelectorAll(".accordion-collapse.show").forEach((p) => {
+      p.classList.remove("show");
+    });
+    accordion.querySelectorAll('[data-bs-toggle="collapse"]').forEach((b) => {
+      b.classList.add("collapsed");
+      b.setAttribute("aria-expanded", "false");
+    });
+
+    if (open) {
+      panel.classList.add("show");
+      button.classList.remove("collapsed");
+      button.setAttribute("aria-expanded", "true");
+    }
+  };
 
   return (
     <section className="relative md:py-24 !tracking-wide py-16 overflow-hidden">
@@ -460,7 +490,7 @@ export default function KeyLoveFAQ() {
           </div>
 
           <div className="md:col-span-6">
-            <div className="accordion space-y-3" id="accordionExample">
+            <div className="accordion space-y-3" id="accordionExample" onClick={toggleFaq}>
             <div className="accordion-item !text-white relative  shadow dark:shadow-gray-800 rounded-md overflow-hidden">
                 <h2
                   className="accordion-header mb-0 !cursor-pointer font-semibold"
