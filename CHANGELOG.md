@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased] (beta)
+### Changed
+- Calendar (`.ics`) exports now write the event organizer as a `mailto:` URI, matching how attendees are written.
+- Updated the Microsoft Graph SDK to v1.105.0.
+
 ### Security
 - Build with Go 1.26 and update dependencies with known vulnerabilities (golang.org/x/net, x/crypto, x/text, grpc, golang-jwt, azidentity, kiota-http-go, brotli, klauspost/compress).
 - Update container base images and website dependencies.
