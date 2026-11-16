@@ -27,9 +27,9 @@ require (
 	github.com/microsoft/kiota-abstractions-go v1.12.1
 	github.com/microsoft/kiota-authentication-azure-go v1.3.1
 	github.com/microsoft/kiota-http-go v1.6.1
-	github.com/microsoft/kiota-serialization-form-go v1.1.6
+	github.com/microsoft/kiota-serialization-form-go v1.1.7
 	github.com/microsoft/kiota-serialization-json-go v1.1.5
-	github.com/microsoftgraph/msgraph-sdk-go v1.105.0
+	github.com/microsoftgraph/msgraph-sdk-go v1.106.0
 	github.com/microsoftgraph/msgraph-sdk-go-core v1.4.1
 	github.com/pkg/errors v0.9.1
 	github.com/puzpuzpuz/xsync/v3 v3.5.1
@@ -40,7 +40,7 @@ require (
 	github.com/spf13/pflag v1.1.0
 	github.com/spf13/viper v1.21.0
 	github.com/stretchr/testify v1.12.1
-	github.com/tidwall/pretty v1.2.2
+	github.com/tidwall/pretty v1.3.0
 	github.com/tomlazar/table v0.1.2
 	github.com/vbauerster/mpb/v8 v8.1.6 // do not update; keep at v8.1.6
 	github.com/xhit/go-simple-mail/v2 v2.16.0
@@ -133,7 +133,7 @@ require (
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/segmentio/backo-go v1.0.1 // indirect
-	github.com/tidwall/gjson v1.20.1
+	github.com/tidwall/gjson v1.20.2
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/xtgo/uuid v0.0.0-20140804021211-a0b114877d4c // indirect
 	github.com/zeebo/blake3 v0.2.3 // indirect
